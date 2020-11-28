@@ -1,4 +1,5 @@
 import tkinter as tk
+import numpy as np
 from tkinter import filedialog
 from tkinter import *
 from PIL import ImageTk, Image
@@ -6,7 +7,7 @@ from PIL import ImageTk, Image
 import numpy
 #load the trained model to classify sign
 from keras.models import load_model
-model = load_model('traffic_classifier.h5')
+model = load_model('my_model1.h5')
 
 #dictionary to label all traffic signs class.
 classes = { 1:'Speed limit (20km/h)',
@@ -65,11 +66,12 @@ sign_image = Label(top)
 def classify(file_path):
     global label_packed
     image = Image.open(file_path)
-    image = image.resize((30,30))
+    image = image.resize((32,32))
     image = numpy.expand_dims(image, axis=0)
     image = numpy.array(image)
     print(image.shape)
-    pred = model.predict_classes([image])[0]
+    #pred = model.predict_classes([image])[0]
+    pred = np.argmax(model.predict([image])[0], axis=-1)
     sign = classes[pred+1]
     print(sign)
     label.configure(foreground='#011638', text=sign) 
